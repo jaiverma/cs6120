@@ -1,0 +1,19 @@
+# program to sum the first n natural numbers
+# ARGS: 100
+@sum_n(n: int): int {
+    total: int = const 0;
+    idx: int = const 1;
+    one: int = const 1;
+.loop:
+    total: int = add total idx;
+    idx: int = add idx one;
+    cond: bool = gt idx n;
+    br cond .done .loop;
+.done:
+    ret total;
+}
+
+@main(n: int) {
+    ans: int = call @sum_n n;
+    print ans;
+}

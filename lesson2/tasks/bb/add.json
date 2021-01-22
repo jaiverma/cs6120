@@ -1,0 +1,111 @@
+{
+  "functions": [
+    {
+      "args": [
+        {
+          "name": "n",
+          "type": "int"
+        }
+      ],
+      "instrs": [
+        {
+          "dest": "total",
+          "op": "const",
+          "type": "int",
+          "value": 0
+        },
+        {
+          "dest": "idx",
+          "op": "const",
+          "type": "int",
+          "value": 1
+        },
+        {
+          "dest": "one",
+          "op": "const",
+          "type": "int",
+          "value": 1
+        },
+        {
+          "label": "loop"
+        },
+        {
+          "args": [
+            "total",
+            "idx"
+          ],
+          "dest": "total",
+          "op": "add",
+          "type": "int"
+        },
+        {
+          "args": [
+            "idx",
+            "one"
+          ],
+          "dest": "idx",
+          "op": "add",
+          "type": "int"
+        },
+        {
+          "args": [
+            "idx",
+            "n"
+          ],
+          "dest": "cond",
+          "op": "gt",
+          "type": "bool"
+        },
+        {
+          "args": [
+            "cond"
+          ],
+          "labels": [
+            "done",
+            "loop"
+          ],
+          "op": "br"
+        },
+        {
+          "label": "done"
+        },
+        {
+          "args": [
+            "total"
+          ],
+          "op": "ret"
+        }
+      ],
+      "name": "sum_n",
+      "type": "int"
+    },
+    {
+      "args": [
+        {
+          "name": "n",
+          "type": "int"
+        }
+      ],
+      "instrs": [
+        {
+          "args": [
+            "n"
+          ],
+          "dest": "ans",
+          "funcs": [
+            "sum_n"
+          ],
+          "op": "call",
+          "type": "int"
+        },
+        {
+          "args": [
+            "ans"
+          ],
+          "op": "print"
+        }
+      ],
+      "name": "main"
+    }
+  ]
+}

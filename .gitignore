@@ -1,3 +1,4 @@
 dune
 .merlin
 _build
+.DS_Store

@@ -1,0 +1,3 @@
+(executable
+    (name count_add)
+    (libraries core yojson))

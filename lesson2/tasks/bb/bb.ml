@@ -120,7 +120,7 @@ module CFG = struct
     in
     let edges = get_edges cfg.edges in
     let nodes = List.map ~f:(fun (label, _) -> sprintf "\t%s;\n" label) cfg.bbs in
-    let filename = sprintf "/tmp/%s.dot" cfg.fn in
+    let filename = sprintf "/tmp/cs6120/%s.dot" cfg.fn in
     let oc = Out_channel.create filename in
     Out_channel.output_string oc "digraph G {\n";
     (* add nodes *)

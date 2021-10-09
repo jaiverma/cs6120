@@ -39,7 +39,7 @@ and control =
 
 and misc =
   | Id of Typ.t
-  | Print of Typ.t list
+  | Print of string list
   | Nop
   | Const of Typ.t
 [@@deriving show]
@@ -289,5 +289,14 @@ let of_yojson json =
       let instr = Control (Ret arg) in
       Printf.printf "'ret' instruction, instr: %s\n" @@ show instr;
       instr
-    | "id" | "print" | "nop" | _ -> failwith @@ Printf.sprintf "op not implemented: %s" op)
+    | "id" -> failwith "id not implemented"
+    | "print" ->
+      let args =
+        J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
+      in
+      let instr = Misc (Print args) in
+      Printf.printf "'print' instruction, instr: %s\n" @@ show instr;
+      instr
+    | "nop" -> Misc Nop
+    | _ -> failwith @@ Printf.sprintf "op not implemented: %s" op)
 ;;

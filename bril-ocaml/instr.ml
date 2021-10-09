@@ -25,16 +25,16 @@ and comparison =
 [@@deriving show]
 
 and logic =
-  | Not of bool
-  | And of (bool * bool)
-  | Or of (bool * bool)
+  | Not of string
+  | And of (string * string)
+  | Or of (string * string)
 [@@deriving show]
 
 and control =
-  | Jmp of string
-  | Br of (bool * string * string)
-  | Call of string
-  | Ret
+  | Jmp of t
+  | Br of (string * t * t)
+  | Call of (string * string list)
+  | Ret of string option
 [@@deriving show]
 
 and misc =
@@ -93,7 +93,7 @@ let of_yojson json =
         | _ -> failwith "expecting two arguments"
       in
       let instr = Arithmetic (Mul (arg1, arg2)) in
-      Printf.printf "'add' instruction, dest: %s, instr: %s\n" dest @@ show instr;
+      Printf.printf "'mul' instruction, dest: %s, instr: %s\n" dest @@ show instr;
       instr
     | "sub" ->
       let dest = J.Util.member "dest" json |> J.Util.to_string in
@@ -107,23 +107,187 @@ let of_yojson json =
         | _ -> failwith "expecting two arguments"
       in
       let instr = Arithmetic (Sub (arg1, arg2)) in
-      Printf.printf "'add' instruction, dest: %s, instr: %s" dest @@ show instr;
+      Printf.printf "'sub' instruction, dest: %s, instr: %s\n" dest @@ show instr;
       instr
-    | "div"
-    | "eq"
-    | "lt"
-    | "Gt"
-    | "Le"
-    | "Ge"
-    | "not"
-    | "and"
-    | "or"
-    | "jmp"
-    | "Br"
-    | "call"
-    | "ret"
-    | "id"
-    | "print"
-    | "nop"
-    | _ -> failwith @@ Printf.sprintf "of not implemented: %s" op)
+    | "div" ->
+      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _typ = J.Util.member "type" json |> J.Util.to_string in
+      let args =
+        J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
+      in
+      let arg1, arg2 =
+        match args with
+        | [ a; b ] -> a, b
+        | _ -> failwith "expecting two arguments"
+      in
+      let instr = Arithmetic (Div (arg1, arg2)) in
+      Printf.printf "'div' instruction, dest: %s, instr: %s\n" dest @@ show instr;
+      instr
+    | "eq" ->
+      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _typ = J.Util.member "type" json |> J.Util.to_string in
+      let args =
+        J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
+      in
+      let arg1, arg2 =
+        match args with
+        | [ a; b ] -> a, b
+        | _ -> failwith "expecting two arguments"
+      in
+      let instr = Comparison (Eq (arg1, arg2)) in
+      Printf.printf "'eq' instruction, dest: %s, instr: %s\n" dest @@ show instr;
+      instr
+    | "lt" ->
+      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _typ = J.Util.member "type" json |> J.Util.to_string in
+      let args =
+        J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
+      in
+      let arg1, arg2 =
+        match args with
+        | [ a; b ] -> a, b
+        | _ -> failwith "expecting two arguments"
+      in
+      let instr = Comparison (Lt (arg1, arg2)) in
+      Printf.printf "'lt' instruction, dest: %s, instr: %s\n" dest @@ show instr;
+      instr
+    | "gt" ->
+      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _typ = J.Util.member "type" json |> J.Util.to_string in
+      let args =
+        J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
+      in
+      let arg1, arg2 =
+        match args with
+        | [ a; b ] -> a, b
+        | _ -> failwith "expecting two arguments"
+      in
+      let instr = Comparison (Gt (arg1, arg2)) in
+      Printf.printf "'gt' instruction, dest: %s, instr: %s\n" dest @@ show instr;
+      instr
+    | "le" ->
+      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _typ = J.Util.member "type" json |> J.Util.to_string in
+      let args =
+        J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
+      in
+      let arg1, arg2 =
+        match args with
+        | [ a; b ] -> a, b
+        | _ -> failwith "expecting two arguments"
+      in
+      let instr = Comparison (Le (arg1, arg2)) in
+      Printf.printf "'le' instruction, dest: %s, instr: %s\n" dest @@ show instr;
+      instr
+    | "ge" ->
+      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _typ = J.Util.member "type" json |> J.Util.to_string in
+      let args =
+        J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
+      in
+      let arg1, arg2 =
+        match args with
+        | [ a; b ] -> a, b
+        | _ -> failwith "expecting two arguments"
+      in
+      let instr = Comparison (Ge (arg1, arg2)) in
+      Printf.printf "'ge' instruction, dest: %s, instr: %s\n" dest @@ show instr;
+      instr
+    | "not" ->
+      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _typ = J.Util.member "type" json |> J.Util.to_string in
+      let args =
+        J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
+      in
+      let arg =
+        match args with
+        | [ a ] -> a
+        | _ -> failwith "expecting one argument"
+      in
+      let instr = Logic (Not arg) in
+      Printf.printf "'not' instruction, dest: %s, instr: %s\n" dest @@ show instr;
+      instr
+    | "and" ->
+      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _typ = J.Util.member "type" json |> J.Util.to_string in
+      let args =
+        J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
+      in
+      let arg1, arg2 =
+        match args with
+        | [ a; b ] -> a, b
+        | _ -> failwith "expecting two arguments"
+      in
+      let instr = Logic (And (arg1, arg2)) in
+      Printf.printf "'and' instruction, dest: %s, instr: %s\n" dest @@ show instr;
+      instr
+    | "or" ->
+      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _typ = J.Util.member "type" json |> J.Util.to_string in
+      let args =
+        J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
+      in
+      let arg1, arg2 =
+        match args with
+        | [ a; b ] -> a, b
+        | _ -> failwith "expecting two arguments"
+      in
+      let instr = Logic (Or (arg1, arg2)) in
+      Printf.printf "'or' instruction, dest: %s, instr: %s\n" dest @@ show instr;
+      instr
+    | "jmp" ->
+      let label = J.Util.member "label" json |> J.Util.to_string in
+      let instr = Control (Jmp (Label label)) in
+      Printf.printf "'or' instruction, instr: %s\n" @@ show instr;
+      instr
+    | "br" ->
+      let args =
+        J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
+      in
+      let arg =
+        match args with
+        | [ a ] -> a
+        | _ -> failwith "expecting one argument"
+      in
+      let labels =
+        J.Util.member "labels" json |> J.Util.to_list |> List.map J.Util.to_string
+      in
+      let instr =
+        match labels with
+        | [ a; b ] -> Control (Br (arg, Label a, Label b))
+        | _ -> failwith "expecting two labels"
+      in
+      Printf.printf "'br' instruction, instr: %s\n" @@ show instr;
+      instr
+    | "call" ->
+      let funcs =
+        J.Util.member "funcs" json |> J.Util.to_list |> List.map J.Util.to_string
+      in
+      let func =
+        match funcs with
+        | [ a ] -> a
+        | _ -> failwith "expecting one argument"
+      in
+      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let args =
+        J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
+      in
+      let _typ = J.Util.member "type" json |> J.Util.to_string in
+      let instr = Control (Call (func, args)) in
+      Printf.printf "'call' instruction, dest: %s, instr: %s\n" dest @@ show instr;
+      instr
+    | "ret" ->
+      let args =
+        J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
+      in
+      let arg =
+        match args with
+        | [] -> None
+        | [ a ] -> Some a
+        | _ -> failwith "expecting at most one argument"
+      in
+      let instr = Control (Ret arg) in
+      Printf.printf "'ret' instruction, instr: %s\n" @@ show instr;
+      instr
+    | "id" | "print" | "nop" | _ -> failwith @@ Printf.sprintf "op not implemented: %s" op)
 ;;

@@ -1,3 +1,3 @@
 (executable
-    (name bb)
-    (libraries core yojson))
+ (name bb)
+ (libraries core yojson))

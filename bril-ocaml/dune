@@ -1,0 +1,5 @@
+(executable
+ (name bril)
+ (libraries core yojson)
+ (preprocess
+  (pps ppx_deriving.show)))

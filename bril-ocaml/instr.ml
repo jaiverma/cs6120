@@ -53,22 +53,18 @@ let of_yojson json =
     let op = J.Util.member "op" json |> J.Util.to_string in
     (match op with
     | "const" ->
-      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _dest = J.Util.member "dest" json |> J.Util.to_string in
       let typ = J.Util.member "type" json |> J.Util.to_string in
-      let instr =
-        match typ with
-        | "int" ->
-          let value = J.Util.member "value" json |> J.Util.to_int in
-          Misc (Const (Primitive (Integer value)))
-        | "bool" ->
-          let value = J.Util.member "value" json |> J.Util.to_bool in
-          Misc (Const (Primitive (Boolean value)))
-        | _ -> failwith @@ Printf.sprintf "invalid type: %s" typ
-      in
-      Printf.printf "'const' instruction, dest: %s, instr: %s\n" dest @@ show instr;
-      instr
+      (match typ with
+      | "int" ->
+        let value = J.Util.member "value" json |> J.Util.to_int in
+        Misc (Const (Primitive (Integer value)))
+      | "bool" ->
+        let value = J.Util.member "value" json |> J.Util.to_bool in
+        Misc (Const (Primitive (Boolean value)))
+      | _ -> failwith @@ Printf.sprintf "invalid type: %s" typ)
     | "add" ->
-      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _dest = J.Util.member "dest" json |> J.Util.to_string in
       let _typ = J.Util.member "type" json |> J.Util.to_string in
       let args =
         J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
@@ -78,11 +74,9 @@ let of_yojson json =
         | [ a; b ] -> a, b
         | _ -> failwith "expecting two arguments"
       in
-      let instr = Arithmetic (Add (arg1, arg2)) in
-      Printf.printf "'add' instruction, dest: %s, instr: %s\n" dest @@ show instr;
-      instr
+      Arithmetic (Add (arg1, arg2))
     | "mul" ->
-      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _dest = J.Util.member "dest" json |> J.Util.to_string in
       let _typ = J.Util.member "type" json |> J.Util.to_string in
       let args =
         J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
@@ -92,11 +86,9 @@ let of_yojson json =
         | [ a; b ] -> a, b
         | _ -> failwith "expecting two arguments"
       in
-      let instr = Arithmetic (Mul (arg1, arg2)) in
-      Printf.printf "'mul' instruction, dest: %s, instr: %s\n" dest @@ show instr;
-      instr
+      Arithmetic (Mul (arg1, arg2))
     | "sub" ->
-      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _dest = J.Util.member "dest" json |> J.Util.to_string in
       let _typ = J.Util.member "type" json |> J.Util.to_string in
       let args =
         J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
@@ -106,11 +98,9 @@ let of_yojson json =
         | [ a; b ] -> a, b
         | _ -> failwith "expecting two arguments"
       in
-      let instr = Arithmetic (Sub (arg1, arg2)) in
-      Printf.printf "'sub' instruction, dest: %s, instr: %s\n" dest @@ show instr;
-      instr
+      Arithmetic (Sub (arg1, arg2))
     | "div" ->
-      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _dest = J.Util.member "dest" json |> J.Util.to_string in
       let _typ = J.Util.member "type" json |> J.Util.to_string in
       let args =
         J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
@@ -120,11 +110,9 @@ let of_yojson json =
         | [ a; b ] -> a, b
         | _ -> failwith "expecting two arguments"
       in
-      let instr = Arithmetic (Div (arg1, arg2)) in
-      Printf.printf "'div' instruction, dest: %s, instr: %s\n" dest @@ show instr;
-      instr
+      Arithmetic (Div (arg1, arg2))
     | "eq" ->
-      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _dest = J.Util.member "dest" json |> J.Util.to_string in
       let _typ = J.Util.member "type" json |> J.Util.to_string in
       let args =
         J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
@@ -134,11 +122,9 @@ let of_yojson json =
         | [ a; b ] -> a, b
         | _ -> failwith "expecting two arguments"
       in
-      let instr = Comparison (Eq (arg1, arg2)) in
-      Printf.printf "'eq' instruction, dest: %s, instr: %s\n" dest @@ show instr;
-      instr
+      Comparison (Eq (arg1, arg2))
     | "lt" ->
-      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _dest = J.Util.member "dest" json |> J.Util.to_string in
       let _typ = J.Util.member "type" json |> J.Util.to_string in
       let args =
         J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
@@ -148,11 +134,9 @@ let of_yojson json =
         | [ a; b ] -> a, b
         | _ -> failwith "expecting two arguments"
       in
-      let instr = Comparison (Lt (arg1, arg2)) in
-      Printf.printf "'lt' instruction, dest: %s, instr: %s\n" dest @@ show instr;
-      instr
+      Comparison (Lt (arg1, arg2))
     | "gt" ->
-      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _dest = J.Util.member "dest" json |> J.Util.to_string in
       let _typ = J.Util.member "type" json |> J.Util.to_string in
       let args =
         J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
@@ -162,11 +146,9 @@ let of_yojson json =
         | [ a; b ] -> a, b
         | _ -> failwith "expecting two arguments"
       in
-      let instr = Comparison (Gt (arg1, arg2)) in
-      Printf.printf "'gt' instruction, dest: %s, instr: %s\n" dest @@ show instr;
-      instr
+      Comparison (Gt (arg1, arg2))
     | "le" ->
-      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _dest = J.Util.member "dest" json |> J.Util.to_string in
       let _typ = J.Util.member "type" json |> J.Util.to_string in
       let args =
         J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
@@ -176,11 +158,9 @@ let of_yojson json =
         | [ a; b ] -> a, b
         | _ -> failwith "expecting two arguments"
       in
-      let instr = Comparison (Le (arg1, arg2)) in
-      Printf.printf "'le' instruction, dest: %s, instr: %s\n" dest @@ show instr;
-      instr
+      Comparison (Le (arg1, arg2))
     | "ge" ->
-      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _dest = J.Util.member "dest" json |> J.Util.to_string in
       let _typ = J.Util.member "type" json |> J.Util.to_string in
       let args =
         J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
@@ -190,11 +170,9 @@ let of_yojson json =
         | [ a; b ] -> a, b
         | _ -> failwith "expecting two arguments"
       in
-      let instr = Comparison (Ge (arg1, arg2)) in
-      Printf.printf "'ge' instruction, dest: %s, instr: %s\n" dest @@ show instr;
-      instr
+      Comparison (Ge (arg1, arg2))
     | "not" ->
-      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _dest = J.Util.member "dest" json |> J.Util.to_string in
       let _typ = J.Util.member "type" json |> J.Util.to_string in
       let args =
         J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
@@ -204,11 +182,9 @@ let of_yojson json =
         | [ a ] -> a
         | _ -> failwith "expecting one argument"
       in
-      let instr = Logic (Not arg) in
-      Printf.printf "'not' instruction, dest: %s, instr: %s\n" dest @@ show instr;
-      instr
+      Logic (Not arg)
     | "and" ->
-      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _dest = J.Util.member "dest" json |> J.Util.to_string in
       let _typ = J.Util.member "type" json |> J.Util.to_string in
       let args =
         J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
@@ -218,11 +194,9 @@ let of_yojson json =
         | [ a; b ] -> a, b
         | _ -> failwith "expecting two arguments"
       in
-      let instr = Logic (And (arg1, arg2)) in
-      Printf.printf "'and' instruction, dest: %s, instr: %s\n" dest @@ show instr;
-      instr
+      Logic (And (arg1, arg2))
     | "or" ->
-      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _dest = J.Util.member "dest" json |> J.Util.to_string in
       let _typ = J.Util.member "type" json |> J.Util.to_string in
       let args =
         J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
@@ -232,14 +206,10 @@ let of_yojson json =
         | [ a; b ] -> a, b
         | _ -> failwith "expecting two arguments"
       in
-      let instr = Logic (Or (arg1, arg2)) in
-      Printf.printf "'or' instruction, dest: %s, instr: %s\n" dest @@ show instr;
-      instr
+      Logic (Or (arg1, arg2))
     | "jmp" ->
       let label = J.Util.member "label" json |> J.Util.to_string in
-      let instr = Control (Jmp (Label label)) in
-      Printf.printf "'or' instruction, instr: %s\n" @@ show instr;
-      instr
+      Control (Jmp (Label label))
     | "br" ->
       let args =
         J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
@@ -252,13 +222,9 @@ let of_yojson json =
       let labels =
         J.Util.member "labels" json |> J.Util.to_list |> List.map J.Util.to_string
       in
-      let instr =
-        match labels with
-        | [ a; b ] -> Control (Br (arg, Label a, Label b))
-        | _ -> failwith "expecting two labels"
-      in
-      Printf.printf "'br' instruction, instr: %s\n" @@ show instr;
-      instr
+      (match labels with
+      | [ a; b ] -> Control (Br (arg, Label a, Label b))
+      | _ -> failwith "expecting two labels")
     | "call" ->
       let funcs =
         J.Util.member "funcs" json |> J.Util.to_list |> List.map J.Util.to_string
@@ -268,14 +234,12 @@ let of_yojson json =
         | [ a ] -> a
         | _ -> failwith "expecting one argument"
       in
-      let dest = J.Util.member "dest" json |> J.Util.to_string in
+      let _dest = J.Util.member "dest" json |> J.Util.to_string in
       let args =
         J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
       in
       let _typ = J.Util.member "type" json |> J.Util.to_string in
-      let instr = Control (Call (func, args)) in
-      Printf.printf "'call' instruction, dest: %s, instr: %s\n" dest @@ show instr;
-      instr
+      Control (Call (func, args))
     | "ret" ->
       let args =
         J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
@@ -286,17 +250,13 @@ let of_yojson json =
         | [ a ] -> Some a
         | _ -> failwith "expecting at most one argument"
       in
-      let instr = Control (Ret arg) in
-      Printf.printf "'ret' instruction, instr: %s\n" @@ show instr;
-      instr
+      Control (Ret arg)
     | "id" -> failwith "id not implemented"
     | "print" ->
       let args =
         J.Util.member "args" json |> J.Util.to_list |> List.map J.Util.to_string
       in
-      let instr = Misc (Print args) in
-      Printf.printf "'print' instruction, instr: %s\n" @@ show instr;
-      instr
+      Misc (Print args)
     | "nop" -> Misc Nop
     | _ -> failwith @@ Printf.sprintf "op not implemented: %s" op)
 ;;

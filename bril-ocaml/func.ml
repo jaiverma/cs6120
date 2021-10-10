@@ -1,8 +1,8 @@
 (* args, instrs, name, type *)
 type t =
   { name : string
-  ; args : (string * Typ.t) list
+  ; args : (string * string) list
   ; instrs : Instr.t list
-  ; typ : Typ.t option
+  ; typ : string option
   }
 [@@deriving show]

@@ -2,6 +2,22 @@ module J = Yojson.Safe
 
 type t = Func of Func.t list
 
+let get_bbs (func : Func.t) =
+  let rec get_bbs_impl acc = function
+    | [] -> [ acc ]
+    | x :: xs ->
+      (match x with
+      | Instr.Label _ as instr -> acc :: get_bbs_impl [ instr ] xs
+      (* check for terminator instruction *)
+      | (Instr.Jmp _ | Instr.Br _ | Instr.Ret _) as instr ->
+        (instr :: acc) :: get_bbs_impl [] xs
+      | instr -> get_bbs_impl (instr :: acc) xs)
+  in
+  get_bbs_impl [] func.instrs
+  |> List.filter (fun l -> List.length l <> 0)
+  |> List.map List.rev
+;;
+
 let of_file filename =
   let json = J.from_file filename in
   let functions = J.Util.member "functions" json |> J.Util.to_list in
